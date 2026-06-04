@@ -324,6 +324,16 @@ docker network connect frontend api    # api now on both networks
 # In code: DB_HOST=postgres (not an IP address!)
 
 ===========================================================================================================
+
+
+17: What is Docker volume?
+A: --> Containers are usually temporary; when they stop or restart, any data inside them is lost.
+   --> Volumes allow you to store data outside the container, so it persists even after the container is gone.
+
+18: what are docker volume types?
+A:  1. Named Volumes and Unnamed Volumes : container to container data replication
+    2. Bind Mount : specific host path mapped to container path (or) It is file or directory in the host system(docker server) is mapped with container file system.
+   
 8. What is Docker Compose?
 9. What is Docker Swarm?
 10.  "What are Docker volumes?"
