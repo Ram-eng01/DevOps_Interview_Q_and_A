@@ -332,8 +332,22 @@ A: --> Containers are usually temporary; when they stop or restart, any data ins
 
 18: what are docker volume types?
 A:  1. Named Volumes and Unnamed Volumes : container to container data replication
-    2. Bind Mount : specific host path mapped to container path (or) It is file or directory in the host system(docker server) is mapped with container file system.
-   
+    2. Bind Mount : specific host path mapped to container path (or) It is file or directory in the host system(docker server)
+      is mapped with container file system.
+==================================================================
+what is bind mount?
+===================
+
+It is file or directory in the host system(docker server) is mapped with container file system.
+
+
+NOTE: if you want to map host file system with container file system, we are using the option "-v"
+
+IQ] My conatiner is in running state , Is it possible to map the volume to that conatiner?
+
+ANS: port mapping and volume mapping not possible for running containers.
+====================================================================
+
 8. What is Docker Compose?
 9. What is Docker Swarm?
 10.  "What are Docker volumes?"
