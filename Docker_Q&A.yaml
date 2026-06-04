@@ -219,7 +219,18 @@ Build and run:
   $docker build -t my-node-app:1.0 .
   $docker run -itd -p 3000:3000 --name nodeapp my-node-app:1.0
   $docker exec -it <cont-id> bash
+=========================================================================
+Example 2: Python Flask App
 
+FROM python:3.12-slim
+WORKDIR /app
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+COPY . .
+EXPOSE 5000
+CMD ["python", "app.py"]
+
+=========================================================================---------------------------------------------------------------------------------------------
 A: 
 10. What is a multi-stage build, and how can it be used to reduce the size of a container image?
 A: A multi-stage build in Docker allows you to use multiple FROM statements in a single Dockerfile. Each FROM starts a new build stage, and you can copy only the necessary
