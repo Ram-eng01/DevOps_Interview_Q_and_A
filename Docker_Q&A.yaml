@@ -350,10 +350,9 @@ ANS: port mapping and volume mapping not possible for running containers.
 
 8. What is Docker Compose?
 9. What is Docker Swarm?
-10.  "What are Docker volumes?"
-11.  "What does EXPOSE 8080 do in a Dockerfile?"
+
 12.  "How do you get a running container’s IP address?"
-13.  "Reduce Docker image size?" (same as reduce image size)
+
 
 
 
