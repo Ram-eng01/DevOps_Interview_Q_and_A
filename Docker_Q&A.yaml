@@ -315,8 +315,7 @@ A: 1. multistage Dockerfile
 13. Do you know about Docker Networking?
 14. Explain how Docker bridge networking works.
 15. Two containers need to talk to each other – how?
-16. Explain different commands inside a Dockerfile?
-17. Can you write a Dockerfile for Node.js Application?
+
 
 19. What is .dockerignore? Why use it?
 20. Write your most used Docker commands?
@@ -324,10 +323,9 @@ A: 1. multistage Dockerfile
 23. Can a container restart by itself? Explain restart: always vs default policies?
 24. Port already in use error : how to fix?
 25. Container exits immediately : possible reasons?
-26. Your Docker image size is too big and the system is slow : how do you fix it?
+
 27. How can you scan a Docker image for vulnerabilities?
 28. Best practices to keep a Docker container secure.
-29. What are dangling images? How do you remove them?
 31. How can you manage sensitive data like passwords in Docker?
 32. What is Docker Swarm? How is it different from Kubernetes?
 33. Name different Docker services on various cloud platforms.
