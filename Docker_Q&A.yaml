@@ -1,1 +1,96 @@
+1. What is Docker?
+A: 
+2. Explain Docker architecture.
+3. What is the difference between Docker image and Docker container?
+4. What is the difference between COPY and ADD?
+5. What is the difference between CMD and ENTRYPOINT?
+ 
+6.How do you reduce Docker image size?
+7.What is a multi-stage Docker build?
+8. What is Docker Compose?
+9. What is Docker Swarm?
+10.  "What are Docker volumes?"
+11.  "What does EXPOSE 8080 do in a Dockerfile?"
+12.  "How do you get a running container’s IP address?"
+13.  "Reduce Docker image size?" (same as reduce image size)
+14.  "Difference between COPY and ADD?" (same wording variation)
+15.  "Difference between CMD and ENTRYPOINT?" (same wording variation)
+16.  "What is Dockerfile?"
+17.  "Write a Dockerfile."
+18. What is Docker and explain its architecture?
+19. What is the difference between containers and virtual machines?
+20. How do containers share OS resources?
+21. How does resource allocation work for containers?
+22. What are namespaces in Docker?
+23. What are Docker layers?
+24. What is the Docker container lifecycle?
+25. What happens internally when you run docker run?
+26. Why does using only Docker (without orchestration) cause downtime?
+27. What are the components of a Dockerfile?
+28. Write a lightweight Dockerfile for an Nginx web server.
+29. Write a multi-stage Dockerfile for a Java application.
+30. Write a Dockerfile for a simple web application.
+31. Can we write a Dockerfile without a base image?
+32. How do you reduce image size using multi-stage builds?
+33. How do you build a Docker image?
+34. How do you build a Docker image and run a container?
+35. How do you see container logs from the host machine?
+36. Where are Docker logs stored in Linux?
+37. How do you remove unused Docker containers?
+38. Write a command to run an nginx container.
+39. How do you attach a volume to a container?
+40. How do you enter inside a running container?
+41. What command do you use to delete a container?
+42. How do you create an image from a running container?
+43. What Docker commands do you use regularly?
+44. How do you troubleshoot a running container?
+45. How do you troubleshoot container memory leaks
+46. What are Docker networks? Explain each type.
+47. What is a Docker volume?
+48. How does Jenkins integrate with Docker?
+49. What is withDockerRegistry?
+50. How do you secure Docker images and containers
+
+
+
+1. What is docker and how does it solve a problem?
+2. What existed before docker ? Compare before vs after.
+3. How is a Docker client different from a Docker daemon?
+4. Explain Docker Architecture and its key components.
+5. What does "pack your app into a container"  mean?
+6. Difference between a Docker image and a container.
+7. Do you know about layering while building an image?
+8. How can you share your container?
+9. What is Docker Hub?
+10. Can you create multiple Docker Containers at once?
+11. How can you persist data in Docker?
+12. What are bind mounts? Why prefer volumes over bind mounts?
+13. Do you know about Docker Networking?
+14. Explain how Docker bridge networking works.
+15. Two containers need to talk to each other – how?
+16. Explain different commands inside a Dockerfile?
+17. Can you write a Dockerfile for Node.js Application?
+18. Difference between CMD and ENTRYPOINT in Dockerfile.
+19. What is .dockerignore? Why use it?
+20. Write your most used Docker commands?
+21. How to copy files from host to container?
+22. How do you debug a failed container?
+23. Can a container restart by itself? Explain restart: always vs default policies?
+24. Port already in use error : how to fix?
+25. Container exits immediately : possible reasons?
+26. Your Docker image size is too big and the system is slow : how do you fix it?
+27. How can you scan a Docker image for vulnerabilities?
+28. Best practices to keep a Docker container secure.
+29. What are dangling images? How do you remove them?
+31. How can you manage sensitive data like passwords in Docker?
+32. What is Docker Swarm? How is it different from Kubernetes?
+33. Name different Docker services on various cloud platforms.
+34. Difference between Podman and Docker?
+35. What is the Container Runtime Interface (CRI)?
+36. Difference between Docker and Kubernetes ?
+37. What is a Pod in Kubernetes? How is it different from a container?
+38. Difference between containerization and virtualization.
+39. Do you know How to Containerize a 3-tier application and How can you manage Networking and Volume?
+40. Explain the lifecycle of Docker containers.
+
 
