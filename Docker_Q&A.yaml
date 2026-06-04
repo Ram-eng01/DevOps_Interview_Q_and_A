@@ -1,3 +1,13 @@
+Key Concepts
+Term	Description
+Image:	A read-only blueprint/template to create containers
+Container:	A running instance of an image
+Dockerfile:	A text file with instructions to build an image
+Registry:	A storage server for images (e.g., Docker Hub)
+Volume:	Persistent storage that lives outside the container
+Network:	Virtual network connecting containers
+
+
 1. What is Docker?
 A: Docker is an open-source platform that lets you package, ship, and run applications in containers.
    A container is a lightweight, standalone, executable unit that includes:
@@ -40,10 +50,146 @@ A: Docker uses a client-server architecture.
    Docker cient is a service which runs a command. The command is translated using RESTAPT and is sent to Docker Daemon(Server)
    Docker Daemon is the Background service that manages images, containers, networks, volumes
    Docker Registry	Remote storage for Docker images
+
+IMAGE LIFECYCLE:
+   Dockerfile
+    |
+    | docker build
+    v
+Local Image  ----docker tag---->  Tagged Image
+    |                                  |
+    | docker run                       | docker push
+    v                                  v
+Container                         Docker Registry
+                                       |
+                                       | docker pull
+                                       v
+                                  Local Image (another machine)
+                                       |
+                                       | docker run
+                                       v
+                                  Container
+
+Container Lifecycle:
+            docker create
+Image -----------------> Created
+                            |
+                    docker start
+                            |
+                            v
+                         Running  <----+
+                            |          | docker restart
+                    docker stop        |
+                            |          |
+                            v          |
+                         Stopped ------+
+                            |
+                    docker rm
+                            |
+                            v
+                         Deleted
+
+What Happens When You Run docker run nginx
+A: 1) Docker client sends the command to Docker daemon
+   2) Daemon checks if nginx image exists locally
+   3) If not found — pulls it from Docker Hub
+   4) Creates a new container from the image
+   5) Allocates a filesystem, network interface, and IP
+   6) Starts the container process
+   7) Container runs until the process exits (or you stop it)
    
 3. What is the difference between Docker image and Docker container?
-4. What is the difference between COPY and ADD?
-5. What is the difference between CMD and ENTRYPOINT?
+A:  
+     Docker Image:
+        Docker image is a read-only template with intruction for creating a Docker container
+        $docker build -t nginx:v1 .
+       
+     Docker Container:
+        A running instance of an image
+       A container is a lightweight, standalone, and executable software package that includes everything your application needs to run —code, 
+       runtime, libraries, and dependencies. Containers ensure that your application works consistently across various environments, from development to production.
+
+      $docker run -itd --name myfirst-container -p 1234:80 nginx:v1
+
+    
+4. What is Dockerfile?
+A: A Dockerfile is a plain text file named Dockerfile (no extension) that contains a set of instructions to build a Docker image layer by layer.
+
+Dockerfile
+    |
+    | docker build -t myapp .
+    v
+Docker Image  (stack of read-only layers)
+    |
+    | docker run myapp
+    v
+Container  (image layers + writable layer on top)
+
+----------------
+Image Layers
+---------------
+Every instruction in a Dockerfile creates a new layer:
+
+Layer 5: CMD ["node", "server.js"]         <-- writable at run time
+Layer 4: COPY . .
+Layer 3: RUN npm install
+Layer 2: COPY package.json .
+Layer 1: FROM node:20-alpine               <-- base layer
+
+Layers are cached — if nothing changes, Docker reuses cached layers, making rebuilds fast.
+
+5. Explain Dockerfile Components?
+A: Dockerfile Instructions Reference
+Instruction	    Syntax	      Purpose
+-----------------
+FROM	          FROM image:tag	         Base image to build from (must be first)
+WORKDIR	       WORKDIR /app	            Set working directory for subsequent instructions
+COPY	          COPY src dest	            Copy files from host machine to container
+ADD	          ADD src dest	            Like COPY but also extracts tarballs and fetches URLs
+RUN	          RUN command	            Execute a command at build time
+CMD	          CMD ["exec", "arg"]	      Default command to run when container starts (overridable)
+ENTRYPOINT    	ENTRYPOINT ["exec"]	      Fixed command; CMD provides default arguments
+ENV	          ENV KEY=value	            Set environment variables (available at build and run time)
+ARG	          ARG NAME=default	         Build-time variables (not available at run time)
+EXPOSE	       EXPOSE 8080	            Document which port the app listens on
+VOLUME	       VOLUME ["/data"]	         Declare a mount point for persistent data
+USER	          USER appuser	            Switch to a non-root user
+LABEL	          LABEL key=value	         Add metadata to the image
+HEALTHCHECK	    HEALTHCHECK CMD ...	      Define a health check command
+SHELL	          SHELL ["/bin/sh"]	      Change the default shell for RUN instructions
+
+       
+6. What is the difference between COPY and ADD?
+A: COPY: Simply copies files and directories from the host to the container
+   ADD: More powerful. Can copy files and directories and also supports URL downloads and automatic extraction of compressed files.
+
+   
+7. What is the difference between CMD and ENTRYPOINT?
+A:
+Both are used to start the application in the container when the container starts.
+CMD:
+  - CMD Defines default command and/or arguments to run inside the container. 
+  - Can be overridden at runtime by providing a new command.
+ENTRYPOINT:
+  - Defines a fixed command that always runs.
+  - Arguments can be passed at runtime, but the command remains the same.
+============================================================================+
+# CMD only — fully overridable
+CMD ["node", "server.js"]
+# docker run myapp            -> runs: node server.js
+# docker run myapp python app -> runs: python app   (CMD replaced)
+
+# ENTRYPOINT only
+ENTRYPOINT ["node"]
+# docker run myapp            -> runs: node
+# docker run myapp server.js  -> runs: node server.js
+
+# ENTRYPOINT + CMD (best practice)
+ENTRYPOINT ["node"]
+CMD ["server.js"]
+# docker run myapp            -> runs: node server.js  (default)
+# docker run myapp app.js     -> runs: node app.js     (CMD overridden)
+================================================================================
  
 6.How do you reduce Docker image size?
 7.What is a multi-stage Docker build?
@@ -53,11 +199,10 @@ A: Docker uses a client-server architecture.
 11.  "What does EXPOSE 8080 do in a Dockerfile?"
 12.  "How do you get a running container’s IP address?"
 13.  "Reduce Docker image size?" (same as reduce image size)
-14.  "Difference between COPY and ADD?" (same wording variation)
-15.  "Difference between CMD and ENTRYPOINT?" (same wording variation)
-16.  "What is Dockerfile?"
+
+
 17.  "Write a Dockerfile."
-18. What is Docker and explain its architecture?
+
 19. What is the difference between containers and virtual machines?
 20. How do containers share OS resources?
 21. How does resource allocation work for containers?
@@ -95,13 +240,11 @@ A: Docker uses a client-server architecture.
 
 
 
-3. How is a Docker client different from a Docker daemon?
 
-5. What does "pack your app into a container"  mean?
-6. Difference between a Docker image and a container.
+
+
 7. Do you know about layering while building an image?
 8. How can you share your container?
-9. What is Docker Hub?
 10. Can you create multiple Docker Containers at once?
 11. How can you persist data in Docker?
 12. What are bind mounts? Why prefer volumes over bind mounts?
@@ -110,10 +253,9 @@ A: Docker uses a client-server architecture.
 15. Two containers need to talk to each other – how?
 16. Explain different commands inside a Dockerfile?
 17. Can you write a Dockerfile for Node.js Application?
-18. Difference between CMD and ENTRYPOINT in Dockerfile.
+
 19. What is .dockerignore? Why use it?
 20. Write your most used Docker commands?
-21. How to copy files from host to container?
 22. How do you debug a failed container?
 23. Can a container restart by itself? Explain restart: always vs default policies?
 24. Port already in use error : how to fix?
