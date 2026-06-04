@@ -230,15 +230,32 @@ COPY . .
 EXPOSE 5000
 CMD ["python", "app.py"]
 
-=========================================================================---------------------------------------------------------------------------------------------
-A: 
+=========================================================================
 10. What is a multi-stage build, and how can it be used to reduce the size of a container image?
 A: A multi-stage build in Docker allows you to use multiple FROM statements in a single Dockerfile. Each FROM starts a new build stage, and you can copy only the necessary
    artifacts from earlier stages into the final image.
    The main goal is to separate the build environment from the runtime environment, so the final container image contains only what is required to run the application.
 
    Example: Multi-Stage Dockerfile:
-6.How do you reduce Docker image size?
+
+FROM node:19-alpine AS firststage
+WORKDIR /app
+COPY package*.json ./
+RUN npm install
+COPY . .
+EXPOSE 3000
+
+FROM firststage AS final
+RUN npm install --production # --production will ignore cache
+COPY . .
+CMD ["node", "index.js"]
+
+================================================================================
+
+11.How do you reduce Docker image size?
+A: 1. multistage Dockerfile
+   2. Combine RUN commands to reduce layers
+   3. Use .dockerignore
 
 8. What is Docker Compose?
 9. What is Docker Swarm?
