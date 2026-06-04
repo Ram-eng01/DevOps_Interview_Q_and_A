@@ -190,9 +190,23 @@ CMD ["server.js"]
 # docker run myapp            -> runs: node server.js  (default)
 # docker run myapp app.js     -> runs: node app.js     (CMD overridden)
 ================================================================================
- 
+
+8. what is dangling images?
+A: when we build the new image with same name and tag as previous image. The previous image will go None state. It is called dangling image.
+    $docker image prune    # Remove dangling images
+    $docker image prune -a  # Remove all unused images
+
+
+9. Write a Dockerfile.
+A: 
+10. What is a multi-stage build, and how can it be used to reduce the size of a container image?
+A: A multi-stage build in Docker allows you to use multiple FROM statements in a single Dockerfile. Each FROM starts a new build stage, and you can copy only the necessary
+   artifacts from earlier stages into the final image.
+   The main goal is to separate the build environment from the runtime environment, so the final container image contains only what is required to run the application.
+
+   Example: Multi-Stage Dockerfile:
 6.How do you reduce Docker image size?
-7.What is a multi-stage Docker build?
+
 8. What is Docker Compose?
 9. What is Docker Swarm?
 10.  "What are Docker volumes?"
@@ -201,7 +215,7 @@ CMD ["server.js"]
 13.  "Reduce Docker image size?" (same as reduce image size)
 
 
-17.  "Write a Dockerfile."
+
 
 19. What is the difference between containers and virtual machines?
 20. How do containers share OS resources?
