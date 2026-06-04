@@ -1,6 +1,46 @@
 1. What is Docker?
-A: 
+A: Docker is an open-source platform that lets you package, ship, and run applications in containers.
+   A container is a lightweight, standalone, executable unit that includes:
+      Application code
+      Runtime (e.g., Node.js, Python, JVM)
+      Libraries and dependencies 
+      Configuration files
+   Without Docker:
+      App works on dev laptop but fails on the server
+      Different OS, different library versions, different configs
+      Onboarding new developers takes hours
+  With Docker:
+     The container carries its own environment
+     Runs identically on any machine that has Docker installed
+     "Build once, run anywhere"
+
+
 2. Explain Docker architecture.
+A: Docker uses a client-server architecture.
+   +----------------+          +-----------------------------------+
+|  Docker Client |          |         Docker Host (Server)      |
+|                |          |                                   |
+|  docker build  | <------> |  +----------+   +-----------+     |
+|  docker pull   |   REST   |  |  Docker  |   | Containers|     |
+|  docker run    |   API    |  |  Daemon  |   |  c1 c2 c3 |     |
+|                |          |  |(dockerd) |   +-----------+     |
++----------------+          |  +----------+   +-----------+     |
+                            |                 |  Images   |     |
+                            |                 |  i1 i2 i3 |     |
+                            |                 +-----------+     |
+                            +-----------------------------------+
+                                         |
+                                         v
+                            +-----------------------------------+
+                            |         Docker Registry           |
+                            |   (Docker Hub / ECR / GCR etc.)  |
+                            +-----------------------------------+
+
+   Docker client and Docker HOST (server) communicates using REST API. 
+   Docker cient is a service which runs a command. The command is translated using RESTAPT and is sent to Docker Daemon(Server)
+   Docker Daemon is the Background service that manages images, containers, networks, volumes
+   Docker Registry	Remote storage for Docker images
+   
 3. What is the difference between Docker image and Docker container?
 4. What is the difference between COPY and ADD?
 5. What is the difference between CMD and ENTRYPOINT?
@@ -53,10 +93,10 @@ A:
 
 
 
-1. What is docker and how does it solve a problem?
-2. What existed before docker ? Compare before vs after.
+
+
 3. How is a Docker client different from a Docker daemon?
-4. Explain Docker Architecture and its key components.
+
 5. What does "pack your app into a container"  mean?
 6. Difference between a Docker image and a container.
 7. Do you know about layering while building an image?
