@@ -271,6 +271,59 @@ A: 1. multistage Dockerfile
    2. Combine RUN commands to reduce layers
    3. Use .dockerignore
 
+12. What is DOcker network?
+A:  
+--> Docker networks are used to establish communication between containers.
+--> If both the containers are same network we can establish the connection.
+--> If you are not mention any network, while creating a container, It will be created in "default bridge network".
+--> By default docker have three networks
+
+     1. bridge [default] : Default. Containers on same bridge can communicate by IP
+     2. host : Container shares host network stack. No port mapping needed.
+     3. none : No network. Isolated container.
+     4. overlay : Multi-host networking (Docker Swarm, Kubernetes)
+
+NOTE: In default bridge network only ip's will work to connect another container not a container names.
+
+Disadvantage of bridge n/w: If container restarted we are not guarantee to get same IP
+
+13. what is the difference between default bridge network and custom bridge network?
+
+Ans: Incase of default bridge network the communication can happen through only IP address. Where as in custom bridge network the communication can happen through the IP address/ container name.
+
+14: What is none network?
+A:
+--> If you create containers in none network, Container will not have an IP address.
+--> we can not access these containers from outside or from any containers or internally.
+
+15. what is overlay network?
+A: Establishing connection between containers in different docker servers.
+
+============================================================================================================
+16. Docker network Command
+A:
+# Network management
+docker network ls                              # List networks
+docker network create myapp-network            # Create bridge network
+docker network create --driver bridge myapp    # Explicit driver
+docker network inspect myapp-network           # Details
+docker network rm myapp-network                # Remove
+docker network prune         #To remove all unused networks    
+
+# Connect containers via custom network (enables DNS)
+docker network create backend
+docker run -d --name db --network backend postgres:16
+docker run -d --name api --network backend myapp
+# Now 'api' can reach 'db' by hostname: ping db
+
+# Connect to multiple networks
+docker network connect frontend api    # api now on both networks
+
+# DNS in custom networks
+# Containers can reach each other by container name
+# In code: DB_HOST=postgres (not an IP address!)
+
+===========================================================================================================
 8. What is Docker Compose?
 9. What is Docker Swarm?
 10.  "What are Docker volumes?"
