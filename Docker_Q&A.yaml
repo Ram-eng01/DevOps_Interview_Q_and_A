@@ -249,6 +249,20 @@ FROM firststage AS final
 RUN npm install --production # --production will ignore cache
 COPY . .
 CMD ["node", "index.js"]
+------
+Example with a Go application:
+   
+# Stage 1: Build the Go application
+FROM golang:1.16 AS builder
+WORKDIR /app
+COPY main.go .
+RUN go build main.go
+
+# Stage 2: Create a minimal image with the built binary
+FROM alpine:latest  # MINIMAL BASE IMAGE
+WORKDIR /root/
+COPY --from=builder /app/main . # COPY WHAT WE WANT!
+CMD ["./main"]
 
 ================================================================================
 
