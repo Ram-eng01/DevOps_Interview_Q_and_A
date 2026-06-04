@@ -198,6 +198,28 @@ A: when we build the new image with same name and tag as previous image. The pre
 
 
 9. Write a Dockerfile.
+A:  
+Example 1: Simple Node.js App
+project/
+├── Dockerfile
+├── package.json
+├── package-lock.json
+└── src/
+    └── index.js
+
+FROM node:20-alpine                        # Step 1: Choose a base image
+WORKDIR /app                               # Step 2: Set working directory inside the container
+COPY package*.json ./                      # Step 3: Copy dependency files first (for layer caching)
+RUN npm install                            # Step 4: Install dependencies
+COPY . .                                   # Step 5: Copy the rest of the source code
+EXPOSE 3000                                # Step 6: Expose the port the app runs on
+CMD ["node","src/index.js"]                # Step 7: Define the command to start the app
+
+Build and run:
+  $docker build -t my-node-app:1.0 .
+  $docker run -itd -p 3000:3000 --name nodeapp my-node-app:1.0
+  $docker exec -it <cont-id> bash
+
 A: 
 10. What is a multi-stage build, and how can it be used to reduce the size of a container image?
 A: A multi-stage build in Docker allows you to use multiple FROM statements in a single Dockerfile. Each FROM starts a new build stage, and you can copy only the necessary
