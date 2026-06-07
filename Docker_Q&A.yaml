@@ -348,8 +348,20 @@ IQ] My conatiner is in running state , Is it possible to map the volume to that 
 ANS: port mapping and volume mapping not possible for running containers.
 ====================================================================
 
-8. What is Docker Compose?
-9. What is Docker Swarm?
+
+19. What is Docker Compose?
+A: Docker Compose is a tool used to define and run multi-container applications. Instead of managing individual docker run commands,
+   you can use a docker-compose.yml file to configure and start your entire application stack with a single command.
+
+   
+----------------------
+Docker Compose: used to create multiple serviceson a single host at a time
+Docker Swarm: Used to create single service on a multiple hosts at a time
+Docker STACK: Used to create multiple services on multiple hosts at a time
+----------------------
+
+20. What is Docker Swarm?
+A: Docker Swarm is a native clustering and orchestration tool for Docker containers. It enables you to manage a group of Docker nodes as a single virtual system, simplifying container deployments and scaling. 
 
 12.  "How do you get a running container’s IP address?"
 
@@ -365,14 +377,9 @@ ANS: port mapping and volume mapping not possible for running containers.
 24. What is the Docker container lifecycle?
 25. What happens internally when you run docker run?
 26. Why does using only Docker (without orchestration) cause downtime?
-27. What are the components of a Dockerfile?
-28. Write a lightweight Dockerfile for an Nginx web server.
-29. Write a multi-stage Dockerfile for a Java application.
 30. Write a Dockerfile for a simple web application.
 31. Can we write a Dockerfile without a base image?
-32. How do you reduce image size using multi-stage builds?
-33. How do you build a Docker image?
-34. How do you build a Docker image and run a container?
+
 35. How do you see container logs from the host machine?
 36. Where are Docker logs stored in Linux?
 37. How do you remove unused Docker containers?
