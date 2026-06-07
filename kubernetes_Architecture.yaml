@@ -34,6 +34,21 @@ Kubernetes Architecture Summary
   multiple Worker Nodes (Kubelet, Kube Proxy, Container Runtime). The control plane manages the cluster state,
   while the worker nodes run the actual workloads (pods).
 
+  1. Control Plane — The Brain of the Cluster
+
+  The control plane manages and maintains the desired state of the cluster (e.g., which apps are running, what images they use, which nodes they run on, etc.).
+
+kube-apiserver:	Entry point to the cluster. All communication (kubectl, controllers) goes through this REST API.
+etcd:	Distributed key-value store for storing all cluster data (configuration, state, secrets, etc.).
+kube-scheduler:	Assigns pods to nodes based on resource availability, taints/tolerations, affinities.
+controller-manager:	Runs various controllers (e.g., Node, ReplicaSet, Job) to monitor and maintain the desired state.
+
+2. Worker Nodes — Where Your Apps Run
+   Worker nodes are where actual application workloads (pods) are deployed
+kubelet:	Agent that runs on each node, communicates with the API server, ensures containers are running.
+kube-proxy:	Manages networking rules to route traffic to the correct pod using Services.
+Container Runtime:y	Responsible for running the containers (e.g., containerd, Docker, CRI-O).
+
   Communication Flow (Simplified)
 1) You run kubectl apply -f deployment.yaml
 2) kubectl talks to the kube-apiserver
