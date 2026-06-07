@@ -56,3 +56,11 @@ Container Runtime:y	Responsible for running the containers (e.g., containerd, Do
 4) The scheduler finds the best node to place the pod
 5) The kubelet on that node pulls the image and starts the container
 6) kube-proxy and service route traffic to the pod
+
+
+
+2. What is the role of kube-proxy?
+A: Kube-proxy is responsible for the networking in the cluster. It maintains the network rules on the worker nodes and also responsible for the load balancing.
+   This can be done by IPTables. Means if someone tries to access the service, kube-proxy will redirect the request to the appropriate POD.
+
+3.
