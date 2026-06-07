@@ -1,1 +1,43 @@
+Kubernetes Architecture Summary
 
+  ┌──────────────────────────────────────────────────────────────────┐
+  │                    CONTROL PLANE                                 │
+  │                                                                  │
+  │  ┌─────────────┐  ┌──────────────────┐  ┌──────────────────┐    │
+  │  │ kube-       │  │ kube-controller- │  │  kube-scheduler  │    │
+  │  │ apiserver   │  │ manager          │  │                  │    │
+  │  │             │  │                  │  │                  │    │
+  │  │ REST API    │  │ ReplicaSet ctrl  │  │ assigns Pods     │    │
+  │  │ Auth + RBAC │  │ Deployment ctrl  │  │ to Nodes         │    │
+  │  │ Admission   │  │ Node ctrl        │  │                  │    │
+  │  └──────┬──────┘  └──────────────────┘  └──────────────────┘    │
+  │         │                                                        │
+  │  ┌──────▼──────┐                                                 │
+  │  │    etcd     │  Key-value store — ALL cluster state            │
+  │  └─────────────┘                                                 │
+  └──────────────────────────────────────────────────────────────────┘
+
+  ┌──────────────────────────────────────────────────────────────────┐
+  │                    WORKER NODES                                  │
+  │                                                                  │
+  │  ┌─────────────┐  ┌─────────────┐  ┌────────────────────────┐   │
+  │  │   kubelet   │  │ kube-proxy  │  │ Container Runtime      │   │
+  │  │             │  │             │  │ (containerd / Docker)  │   │
+  │  │ Manages Pods│  │ Network     │  │ Runs containers        │   │
+  │  │ on this node│  │ rules       │  │                        │   │
+  │  └─────────────┘  └─────────────┘  └────────────────────────┘   │
+  └──────────────────────────────────────────────────────────────────┘
+
+
+
+  A Kubernetes cluster consists of a Control Plane (API Server, Scheduler, Controller Manager, etcd) and
+  multiple Worker Nodes (Kubelet, Kube Proxy, Container Runtime). The control plane manages the cluster state,
+  while the worker nodes run the actual workloads (pods).
+
+  Communication Flow (Simplified)
+1) You run kubectl apply -f deployment.yaml
+2) kubectl talks to the kube-apiserver
+3) The API server stores config/state in etcd
+4) The scheduler finds the best node to place the pod
+5) The kubelet on that node pulls the image and starts the container
+6) kube-proxy and service route traffic to the pod
