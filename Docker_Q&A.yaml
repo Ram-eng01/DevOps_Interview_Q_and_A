@@ -363,25 +363,37 @@ Docker STACK: Used to create multiple services on multiple hosts at a time
 20. What is Docker Swarm?
 A: Docker Swarm is a native clustering and orchestration tool for Docker containers. It enables you to manage a group of Docker nodes as a single virtual system, simplifying container deployments and scaling. 
 
-12.  "How do you get a running container’s IP address?"
+21.  "How do you get a running container’s IP address?"
 
+22. What are namespaces in Docker?
+A: In Docker, namespaces are a Linux kernel feature that provide isolation between processes. They make a container believe it has its own separate environment, 
+   even though it shares the same host operating system kernel.
 
+23. What happens internally when you run docker run?
+A:  1) Docker client sends the command to Docker daemon
+   2) Daemon checks if nginx image exists locally
+   3) If not found — pulls it from Docker Hub
+   4) Creates a new container from the image
+   5) Allocates a filesystem, network interface, and IP
+   6) Starts the container process
+   7) Container runs until the process exits (or you stop it)
 
 
 
 19. What is the difference between containers and virtual machines?
 20. How do containers share OS resources?
 21. How does resource allocation work for containers?
-22. What are namespaces in Docker?
+
 23. What are Docker layers?
-24. What is the Docker container lifecycle?
-25. What happens internally when you run docker run?
+
+
 26. Why does using only Docker (without orchestration) cause downtime?
 30. Write a Dockerfile for a simple web application.
 31. Can we write a Dockerfile without a base image?
 
 35. How do you see container logs from the host machine?
 36. Where are Docker logs stored in Linux?
+A: /var/lib/docker/containers/<container-id>/<container-id>-json.log
 37. How do you remove unused Docker containers?
 38. Write a command to run an nginx container.
 39. How do you attach a volume to a container?
@@ -400,37 +412,159 @@ A: Docker Swarm is a native clustering and orchestration tool for Docker contain
 
 
 
+Docker Images
+__________________________________________________________________________________________________________________________________
+# List images
+docker images                   # or: docker image ls
+docker images -a                # Include intermediate layers
+
+# Pull images
+docker pull ubuntu:22.04        # Specific tag
+docker pull nginx:latest        # Latest tag (avoid in prod!)
+docker pull node:18-alpine      # Alpine-based (smaller)
+
+# Image details
+docker inspect nginx:latest     # Full JSON metadata
+docker history nginx:latest     # Layer history and sizes
+docker image inspect --format='{{.Config.Entrypoint}}' nginx
+
+# Remove images
+docker rmi nginx:latest         # Remove image
+docker rmi -f image-id          # Force remove
+docker image prune              # Remove dangling images
+docker image prune -a           # Remove all unused images
+
+# Tag images
+docker tag myapp:latest registry.company.com/myapp:v1.2.3
+docker tag myapp:latest registry.company.com/myapp:latest
+
+# Build
+docker build -t myapp:latest .
+docker build -t myapp:1.0.0 -f Dockerfile.prod .
+docker build --no-cache -t myapp:latest .         # Skip cache
+docker build --build-arg VERSION=1.2.3 -t myapp . # Pass build args
+
+----------------------------------------------------------------------------------------------------------------------------------------
+
+Docker COntainers Commands
+=====================================================================================================================================
+# Run containers
+docker run nginx                          # Run in foreground
+docker run -d nginx                       # Detached (background)
+docker run -d --name my-nginx nginx       # Named container
+docker run -d -p 8080:80 nginx           # Port mapping (host:container)
+docker run -d -p 127.0.0.1:8080:80 nginx  # Bind to localhost only
+docker run -it ubuntu bash               # Interactive TTY
+docker run --rm ubuntu ls /             # Auto-remove after exit
+docker run -e DB_HOST=localhost app     # Environment variable
+docker run --env-file .env app          # From env file
+docker run -v /host/path:/container/path app  # Bind mount
+docker run --memory="512m" --cpus="1.5" app   # Resource limits
+docker run --restart unless-stopped app  # Auto-restart policy
+
+# Container management
+docker ps                    # Running containers
+docker ps -a                 # All containers (including stopped)
+docker ps --format "table {{.Names}}\t{{.Status}}\t{{.Ports}}"
+docker stop container-id     # Graceful stop (SIGTERM → SIGKILL)
+docker start container-id    # Start stopped container
+docker restart container-id  # Restart
+docker kill container-id     # Force kill (SIGKILL)
+docker rm container-id       # Remove stopped container
+docker rm -f container-id    # Force remove running container
+
+# Exec into running container
+docker exec -it container-id bash      # Interactive shell
+docker exec container-id ls /app       # Run command
+docker exec -u root container-id bash  # As root
+
+# Logs
+docker logs container-id                # All logs
+docker logs -f container-id            # Follow (like tail -f)
+docker logs --tail 100 container-id    # Last 100 lines
+docker logs --since 1h container-id    # Last 1 hour
+docker logs --since "2024-01-15T10:00:00" container-id
+
+# Inspect and stats
+docker inspect container-id            # Full JSON info
+docker stats                           # Live resource usage (all)
+docker stats container-id              # Specific container
+docker top container-id                # Running processes
+
+# Copy files
+docker cp file.txt container-id:/app/  # Host → container
+docker cp container-id:/app/file.txt . # Container → host
+
+# Prune
+docker container prune                 # Remove stopped containers
+docker system prune                    # Remove all unused resources
+docker system prune -a                 # Also remove unused images
+docker system df                       # Docker disk usage
+
+==================================================================================================================
+
+DOCKER VOLUMES
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+# Volume types:
+# Named Volume: managed by Docker, lives in /var/lib/docker/volumes/
+# Bind Mount: specific host path mapped to container path
+# tmpfs: stored in memory (Linux only)
+
+# Named volumes
+docker volume create mydata          # Create
+docker volume ls                     # List
+docker volume inspect mydata         # Details
+docker volume rm mydata              # Remove
+docker volume prune                  # Remove unused
+
+# Use named volume
+docker run -d \
+    --name postgres \
+    -e POSTGRES_PASSWORD=secret \
+    -v postgres-data:/var/lib/postgresql/data \   # Named volume
+    postgres:16
+
+# Bind mount
+docker run -d \
+    -v $(pwd)/nginx.conf:/etc/nginx/nginx.conf:ro \  # Read-only
+    -v $(pwd)/html:/usr/share/nginx/html \
+    nginx
+
+# Share volume between containers
+docker run -d --name app1 -v shared:/data myapp
+docker run -d --name app2 -v shared:/data myapp
+
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+Docker Networking
+)))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))
+Docker Network Types:
+─────────────────────────────────────────────────────────────
+bridge    → Default. Containers on same bridge can communicate by IP
+            (use --name and custom network for DNS resolution)
+host      → Container shares host network stack. No port mapping needed.
+none      → No network. Isolated container.
+overlay   → Multi-host networking (Docker Swarm, Kubernetes)
+macvlan   → Container gets its own MAC/IP (appears as physical device)
 
 
+# Network management
+docker network ls                              # List networks
+docker network create myapp-network            # Create bridge network
+docker network create --driver bridge myapp    # Explicit driver
+docker network inspect myapp-network           # Details
+docker network rm myapp-network                # Remove
 
+# Connect containers via custom network (enables DNS)
+docker network create backend
+docker run -d --name db --network backend postgres:16
+docker run -d --name api --network backend myapp
+# Now 'api' can reach 'db' by hostname: ping db
 
-7. Do you know about layering while building an image?
-8. How can you share your container?
-10. Can you create multiple Docker Containers at once?
-11. How can you persist data in Docker?
-12. What are bind mounts? Why prefer volumes over bind mounts?
-13. Do you know about Docker Networking?
-14. Explain how Docker bridge networking works.
-15. Two containers need to talk to each other – how?
+# Connect to multiple networks
+docker network connect frontend api    # api now on both networks
 
+# DNS in custom networks
+# Containers can reach each other by container name
+# In code: DB_HOST=postgres (not an IP address!)
 
-19. What is .dockerignore? Why use it?
-22. How do you debug a failed container?
-23. Can a container restart by itself? Explain restart: always vs default policies?
-24. Port already in use error : how to fix?
-25. Container exits immediately : possible reasons?
-
-27. How can you scan a Docker image for vulnerabilities?
-28. Best practices to keep a Docker container secure.
-31. How can you manage sensitive data like passwords in Docker?
-32. What is Docker Swarm? How is it different from Kubernetes?
-33. Name different Docker services on various cloud platforms.
-34. Difference between Podman and Docker?
-35. What is the Container Runtime Interface (CRI)?
-36. Difference between Docker and Kubernetes ?
-37. What is a Pod in Kubernetes? How is it different from a container?
-38. Difference between containerization and virtualization.
-39. Do you know How to Containerize a 3-tier application and How can you manage Networking and Volume?
-40. Explain the lifecycle of Docker containers.
-
-
+))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))
