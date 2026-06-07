@@ -415,7 +415,6 @@ A: Docker Swarm is a native clustering and orchestration tool for Docker contain
 
 
 19. What is .dockerignore? Why use it?
-20. Write your most used Docker commands?
 22. How do you debug a failed container?
 23. Can a container restart by itself? Explain restart: always vs default policies?
 24. Port already in use error : how to fix?
