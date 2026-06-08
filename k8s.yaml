@@ -390,3 +390,5 @@ A: We have 3rd party tools for cluster level autoscaling and optimization:
 - Karpenter: Karpenter is a cluster autoscaler for Kubernetes which is used to add and remove worker nodes automatically based on the load.
 - cast.ai: castai is a cluster autoscaler for Kubernetes which is used to add and remove worker nodes automatically based on the load. It will do security checks and cost optimization for the cluster. Its not free.
 
+59. What is the difference between a Service and an Ingress?
+A: A Service operates at Layer 4 (TCP/UDP) and provides basic load balancing between Pods. An Ingress operates at Layer 7 (HTTP/HTTPS) and provides host-based/path-based routing, SSL termination, and name-based virtual hosting — it routes to backend Services. Ingress requires an Ingress Controller (nginx, traefik, etc.) to function.
