@@ -97,11 +97,12 @@ A: A Kubernetes Service provides a stable network identity (IP and DNS) to acces
 
 14. What are the different types of services in Kubernetes?
 A: We have 5 types of services in Kubernetes:
-1. ClusterIP
-2. NodePort
-3. LoadBalancer
-4. Headless
-5. ExternalName
+1. ClusterIP : ClusterIP creates a virtual IP address only accessible within the cluster. This is the default type when no type is specified. Use when: Microservices that only need to talk to each other internally.
+2. NodePort : nodePort exposes the Service on a static port on every Node's IP. A ClusterIP is also created automatically. External clients can reach the Service at <NodeIP>:<NodePort>.
+3. LoadBalancer : LoadBalancer provisions an external cloud load balancer (AWS ELB, GCP Load Balancer, Azure LB) automatically. It builds on top of NodePort and ClusterIP. Use when: Running on a cloud provider and need production-grade external access.
+4. Headless :
+5. ExternalName : ExternalName maps a Service name to an external DNS name. No proxying, no IPs — just a CNAME DNS record.
+                  Use when: You want Pods to access an external service (like an RDS database) using a Kubernetes-style service name
 
 15. What is the difference between Labels and Annotations in Kubernetes?
 A: Labels are used to identify the objects in Kubernetes. For example, labels are used by Services to identify the pods. 
