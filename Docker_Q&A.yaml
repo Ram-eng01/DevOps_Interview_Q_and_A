@@ -146,7 +146,7 @@ FROM	          FROM image:tag	         Base image to build from (must be first)
 WORKDIR	       WORKDIR /app	            Set working directory for subsequent instructions
 COPY	          COPY src dest	            Copy files from host machine to container
 ADD	          ADD src dest	            Like COPY but also extracts tarballs and fetches URLs
-RUN	          RUN command	            Execute a command at build time
+RUN	          RUN command	            RUN instruction used to install packages, configurations on top of base os. It executes at the time of image building. Execute a command at build time
 CMD	          CMD ["exec", "arg"]	      Default command to run when container starts (overridable)
 ENTRYPOINT    	ENTRYPOINT ["exec"]	      Fixed command; CMD provides default arguments
 ENV	          ENV KEY=value	            Set environment variables (available at build and run time)
@@ -378,7 +378,9 @@ A:  1) Docker client sends the command to Docker daemon
    6) Starts the container process
    7) Container runs until the process exits (or you stop it)
 
-
+24. RUN VS CMD
+A: RUN instruction executes at the time of image building
+   CMD instruction executes at the time of container creation
 
 19. What is the difference between containers and virtual machines?
 20. How do containers share OS resources?
