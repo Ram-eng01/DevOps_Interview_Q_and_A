@@ -69,7 +69,8 @@ A: Both the containers in the same POD will have the same IP address. POD is the
 
 11. What is the difference between Deployment, DaemonSet, StatefulSet?
 A: Deployment => It is used to deploy the stateless applications in the cluster. It is used to manage the PODs which are stateless in nature like frontend and backend.
-It provides the rolling updates, rollback, scaling, etc. It is used to manage the stateless applications in the cluster. Everytime pods are recreated the name of the pod will be changed. This is suitable for stateless applications and scaling is done by increasing the number of replicas as per the requirement.
+It provides the rolling updates, rollback, scaling, etc. It is used to manage the stateless applications in the cluster. Everytime pods are recreated the name of the pod
+will be changed. This is suitable for stateless applications and scaling is done by increasing the number of replicas as per the requirement.
 Eg: Frontend, Backend, etc.
 
 DaemonSet => It will make sure run one POD on each node for sure. Image if you have 3 nodes, then 3 PODs will be created. If you add one more node, then one more POD 
