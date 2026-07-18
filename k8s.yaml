@@ -370,6 +370,8 @@ A: We have 2 types of Autoscaling in Kubernetes:
  - Horizontal Pod Autoscaler (HPA)
  - Vertical Pod Autoscaler (VPA)
 
+Q) . What is HPA?
+A: Horizontal Pod Autoscaler (HPA) automatically scales the number of Pod replicas in a Deployment, ReplicaSet, or StatefulSet based on observed metrics (CPU, memory, custom).
 
 51. What are the dependencies for Horizontal Pod Autoscaler (HPA)?
 A: Horizontal Pod Autoscaler (HPA) depends on 2 things:
