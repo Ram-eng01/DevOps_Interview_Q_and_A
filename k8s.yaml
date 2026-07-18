@@ -174,7 +174,10 @@ A: Node Selector is used to deploy the PODs in the specific node. We can use the
 nodeSelector:
   kubernetes.io/hostname: i-04902c10928382c11
 
-
+Q) What is a Kubernetes Namespace and when would you use one?
+A: A Namespace is a virtual partition within a Kubernetes cluster that provides resource isolation, separate RBAC boundaries, and independent resource quotas. Use them when you need to share a cluster across multiple teams, environments (dev/staging/prod), or projects, while preventing resource conflicts and controlling access.
+   A ResourceQuota sets hard limits on total resource consumption within a namespace. Once the quota is reached, new Pods are rejected.
+   
 24. What are the resources I can create in Kubernetes?
 A: kubectl api-resources --namespaced=true - To get the namespaced resources
    kubectl api-resources --namespaced=false - To get the cluster level resources
