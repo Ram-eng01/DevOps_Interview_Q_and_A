@@ -409,3 +409,6 @@ A: We have 3rd party tools for cluster level autoscaling and optimization:
 
 59. What is the difference between a Service and an Ingress?
 A: A Service operates at Layer 4 (TCP/UDP) and provides basic load balancing between Pods. An Ingress operates at Layer 7 (HTTP/HTTPS) and provides host-based/path-based routing, SSL termination, and name-based virtual hosting — it routes to backend Services. Ingress requires an Ingress Controller (nginx, traefik, etc.) to function.
+
+
+
