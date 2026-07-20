@@ -411,4 +411,24 @@ A: We have 3rd party tools for cluster level autoscaling and optimization:
 A: A Service operates at Layer 4 (TCP/UDP) and provides basic load balancing between Pods. An Ingress operates at Layer 7 (HTTP/HTTPS) and provides host-based/path-based routing, SSL termination, and name-based virtual hosting — it routes to backend Services. Ingress requires an Ingress Controller (nginx, traefik, etc.) to function.
 
 
+60) What is Deployment Startegy?
+A: These are the techniques which are used to manage the rollout and scaling of applications withina kubernetes cluster.
+   1) Canary Depoyment : Routeing a small percentage of traffic to the new version. Gradually increase traffic to new version as confidence grows.
+   2) Recreate Depoyment: Recreate terminates ALL existing Pods first, then creates new ones.
+   3) Rolling update : Rolling update replaces Pods gradually — a few at a time — so the app stays available throughout the update.
+   4) Bue-Green Depoyment : Maintain two identical environments (Blue = current, Green = new). Switch traffic instantly by changing the Service selector.
 
+
+61) In Kubernetes, Nodes sometimes need to be temporarily removed from scheduling for:
+
+Maintenance (OS patching, Kernel updates)
+Hardware replacement
+Debugging issues
+Rebooting Nodes safely
+For such cases, Kubernetes provides 3 powerful commands:
+
+Cordon — Stop scheduling new Pods on Node (existing Pods stay running).
+Drain — Move all Pods off Node (eviction) + mark Node unschedulable.
+Uncordon — Allow scheduling again (Node back to normal).
+
+62)
