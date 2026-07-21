@@ -63,7 +63,7 @@ Container Runtime:y	Responsible for running the containers (e.g., containerd, Do
 A: Kube-proxy is responsible for the networking in the cluster. It maintains the network rules on the worker nodes and also responsible for the load balancing.
    This can be done by IPTables. Means if someone tries to access the service, kube-proxy will redirect the request to the appropriate POD.
 
-3. 1. What is Ingress?
+3.What is Ingress?
 Ingress is a Kubernetes API object that manages external HTTP and HTTPS access to services inside a cluster. It provides:
 
 Layer 7 (HTTP/HTTPS) routing — unlike Services which are Layer 4 (TCP/UDP)
@@ -71,3 +71,16 @@ Host-based routing — api.example.com → API service, web.example.com → Web 
 Path-based routing — /api → API service, /static → CDN service
 TLS termination — handle SSL certificates in one place
 Single entry point — one IP/LoadBalancer for many services
+
+Component             	What it is	                                            Who manages it
+Ingress Resource	      YAML object with routing rules	                        You (the developer/admin)
+Ingress Controller	    Pod(s) that read rules and route traffic	              Cluster admin installs it
+IngressClass	          Tells which controller handles which Ingress	           Cluster admin configures it
+
+4. what is Custom Resource?
+A: A Custom Resource Definition (CRD) in Kubernetes allows you to extend the Kubernetes API by creating your own custom resource types.
+   This enables you to manage application-specific resources just like built-in Kubernetes objects such as Pods, Deployments, or Services.
+   Componets:
+      1) CRD ---> Customresouce Defination --> Defining a new type of API to K8s
+      2) CR -----> Custom Resouce  ---> like Deployment, service 
+      3) Custom Controller ----> written in Golang
