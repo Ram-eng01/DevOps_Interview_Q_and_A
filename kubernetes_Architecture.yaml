@@ -63,4 +63,11 @@ Container Runtime:y	Responsible for running the containers (e.g., containerd, Do
 A: Kube-proxy is responsible for the networking in the cluster. It maintains the network rules on the worker nodes and also responsible for the load balancing.
    This can be done by IPTables. Means if someone tries to access the service, kube-proxy will redirect the request to the appropriate POD.
 
-3.
+3. 1. What is Ingress?
+Ingress is a Kubernetes API object that manages external HTTP and HTTPS access to services inside a cluster. It provides:
+
+Layer 7 (HTTP/HTTPS) routing — unlike Services which are Layer 4 (TCP/UDP)
+Host-based routing — api.example.com → API service, web.example.com → Web service
+Path-based routing — /api → API service, /static → CDN service
+TLS termination — handle SSL certificates in one place
+Single entry point — one IP/LoadBalancer for many services
