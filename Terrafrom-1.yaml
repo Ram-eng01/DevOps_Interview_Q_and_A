@@ -1,0 +1,18 @@
+1) What is a Resource Block?
+
+A: resource block in Terraform is used to define and manage cloud resources like EC2 instances, S3 buckets, security groups, databases, etc.
+It tells Terraform what to create, how to configure it, and how to track it using the state file.
+
+Example:
+  resource "aws_instance" "web_server" {
+  ami           = "ami-0c55b159cbfafe1f0"
+  instance_type = "t2.micro"
+  tags = {
+    Name = "KKFunda-Web"
+  }
+}
+
+
+
+2) What is count?
+A: The count is an meta-argument in Terraform allows you to create a specified number of instances of a resource or module. It's a simple way to scale out resources.
