@@ -313,3 +313,67 @@ A: Terraform Workspaces are like separate work environments within the same Terr
 
 9) What are data sources?
 A: A Data Source in Terraform lets you fetch information from your infrastructure or cloud provider that you can use elsewhere in your configuration. 
+For example, if you need to use the latest AMI for an EC2 instance, you can use a data source to dynamically pull that information:
+
+data "aws_ami" "latest_ami" { 
+  most_recent = true 
+  owners = ["amazon"] 
+  filter { 
+    name = "name" 
+    values = ["amzn2-ami-hvm-*-x86_64-gp2"] 
+  } 
+} 
+
+resource "aws_instance" "my_instance" { 
+  ami = data.aws_ami.latest_ami.id 
+  instance_type = "t2.micro" 
+}
+
+
+10) What Are Terraform Functions?
+A: Terraform functions are built-in functions that helpers to manipulate values during execution.
+Used to modify strings, lists, maps, CIDR blocks, timestamps, etc.
+Functions are evaluated at plan time.
+
+Function Categories & Common Functions
+Category	                          Functions
+----------                          ----------------
+String	                   join, split, upper, lower, trimspace, replace, format
+Numeric                   	min, max, ceil, floor
+Collection	               length, merge, lookup, keys, values, element, compact
+CIDR/IP	                   cidrsubnet, cidrhost, cidrnetmask
+Date/Time	                  timestamp(), formatdate()
+Conversion	                tostring, tonumber, toset, try, coalesce, coalescelist
+Encoding	                  jsonencode, jsondecode, base64encode, base64decode
+Misc	                    uuid(), random_uuid()
+
+11) What is a Dynamic Block?
+A: A dynamic block is used in Terraform to dynamically generate nested blocks such as ingress, egress, tag, rule, etc., based on a variable or a list.
+
+Dynamic blocks only work inside resource blocks.
+A dynamic block lets you dynamically generate repeated nested configuration blocks using for_each.
+
+Why it's useful:
+Avoids repetitive code
+Allows looping over input variables
+Helps with cleaner, scalable configurations
+
+Example: 
+variable "ports" {
+  default = [80, 443]
+}
+
+resource "aws_security_group" "example" {
+  name = "example"
+
+  dynamic "ingress" {
+    for_each = var.ports
+
+    content {
+      from_port   = ingress.value
+      to_port     = ingress.value
+      protocol    = "tcp"
+      cidr_blocks = ["0.0.0.0/0"]
+    }
+  }
+}
