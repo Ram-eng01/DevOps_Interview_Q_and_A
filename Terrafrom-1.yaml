@@ -72,7 +72,7 @@ resource "aws_iam_user" "department_users" {
 -------------
 
 4) What is provider in Terraform?
-A: The provider meta-argument in Terraform is used to explicitly specify which provider configuration a resource or module should use.
+A: The provider meta-argument in Terraform is used to explicitly specify which cloud provider configuration a resource or module should use.
 
 alias:	Required when defining multiple configurations of the same provider
 provider:	Used inside resources/modules to refer to a specific alias
@@ -110,7 +110,7 @@ resource "aws_instance" "mumbai" {
 
 5) What is depends_on?
 A: The depends_on meta-argument is used in Terraform to explicitly declare a dependency between resources. It ensures that one resource is created only after another resource is fully created.
-Terraform usually detects dependencies automatically, but in some special cases, you must manually instruct Terraform on the resource creation order.
+Terraform usually detects dependencies automatically by analyzing the configuration graph., but in some special cases, you must manually instruct Terraform on the resource creation order.
 
 What Happens Without It?
 Terraform may execute resources in parallel.
@@ -377,3 +377,137 @@ resource "aws_security_group" "example" {
     }
   }
 }
+
+12) What’s a Terraform State file, and why is it important? 
+
+A: The Terraform State file (terraform.tfstate) is like Terraform’s memory. It keeps track of the real-world infrastructure you’ve deployed, mapping your configuration to 
+the actual resources. Whenever you apply changes, Terraform compares your .tf files to the state file to see what’s already been deployed and what needs updating.
+That’s why it’s super important to keep your state file safe and secure, especially if you’re working in a team.
+Many folks use remote state backends like AWS S3 with DynamoDB for state locking to avoid conflicts.
+
+13)  What are Terraform Modules, and why are they useful?
+A: Terraform modules are reusable, self-contained packages of Terraform configurations that simplify infrastructure management. Modules enable code reusability, maintainability,
+and scalability, making complex AWS deployments more efficient.
+If you’re deploying the same type of resource across multiple projects, you can create a module for it. For example, you might have a module for setting up an EC2 instance
+with all your standard settings. Then, instead of copying and pasting that code into every project, you just call the module.
+
+14) How do you manage sensitive data in Terraform?
+ A: Sensitive data in Terraform, like API keys or passwords, should never be hardcoded into your .tf files. Instead, you can use Terraform’s sensitive flag with variables or
+ store the sensitive data in environment variables or a secrets management service like AWS Secrets Manager or HashiCorp Vault.
+ Here’s how you’d define a sensitive variable: 
+ variable "db_password" { 
+  description = "The database password" 
+  type = string 
+  sensitive = true 
+} 
+When you mark a variable as sensitive, Terraform will hide its value in logs and outputs. It’s a simple but crucial step for keeping your infrastructure secure.
+
+15)  What’s a Backend in Terraform, and why is it important? 
+A: A Backend in Terraform determines where and how your state file is stored. By default, Terraform stores the state file locally, but in a team setting, you’ll want to store
+it remotely to avoid conflicts. Popular backend options include AWS S3, Azure Blob Storage, and HashiCorp Consul. 
+Here’s an example of configuring a remote backend using AWS S3:
+terraform { 
+ backend "s3" {  
+   bucket = "my-terraform-state" 
+   key = "global/s3/terraform.tfstate" 
+   region = "us-west-2" 
+  }
+} 
+This setup ensures that your state file is securely stored in S3 and is accessible to everyone on your team. It also enables state locking, so only one person can run terraform apply at a time, preventing race conditions
+
+16) What’s Terraform Taint, and when should you use it? 
+A: terraform taint is a command that marks a resource for destruction and recreation on the next terraform apply. This is useful when a resource is in a bad state, 
+and you want to force Terraform to rebuild it. Here’s how you use it: 
+terraform taint aws_instance.my_instance 
+The next time you run terraform apply, 
+Terraform will destroy the my_instance resource and create a new one. This is a handy tool for fixing issues without manually deleting resources.
+while terraform untaint removes the taint, preventing the resource from being recreated.
+
+
+17)  What is a null_resource in Terraform?
+A: A null_resource in Terraform is a resource that doesn't create or manage any real infrastructure. It's mainly used to run provisioners or trigger actions based on changes in other resources.
+
+It comes from the null provider.
+Why would you use it?
+A common use is to execute a command after another resource changes.
+resource "aws_instance" "web" {
+  ami           = "ami-123456"
+  instance_type = "t2.micro"
+}
+
+resource "null_resource" "configure" {
+  depends_on = [aws_instance.web]
+
+  provisioner "local-exec" {
+    command = "echo Server created"
+  }
+}
+
+Here:
+
+1)Terraform creates the EC2 instance.
+2)Because of depends_on, Terraform waits for the instance.
+3)The null_resource runs the command.
+
+18)  What is the role of the terraform validate command?
+A: erraform validate checks whether the configuration is syntactically valid and internally consistent, but it does not access any remote services.
+
+19)What is Terraform refresh?
+A: terraform refresh updates the Terraform state to reflect the current infrastructure state by querying the cloud provider.
+
+20) What is the purpose of the terraform show command?
+
+A:  terraform show provides detailed information about the current state of your infrastructure, including metadata, resource properties, and the state file.
+
+21) What happens if your Terraform state file is accidentally deleted?
+A: Terraform loses track of all existing resources. On the next terraform apply, it may attempt to recreate all resources, causing duplication or conflicts. You should restore the state file 
+  from a backup or re-import the resources using terraform import.
+
+22) What happens if multiple team members run terraform apply at the same time?
+A: If state locking is not enabled (e.g., using DynamoDB with S3), this can corrupt the state file. Only one apply should be allowed at a time to ensure safe and consistent updates.
+  Enable state locking to prevent race conditions.
+
+23) What happens if a resource creation fails halfway through terraform apply?
+A: Terraform stops the apply process immediately on failure. Successfully created resources remain, and the failed resource will
+  be retried on the next apply unless fixed or removed.
+
+24) What happens if terraform plan shows no changes but infrastructure was modified manually?
+A: Terraform will not detect drift unless you run terraform refresh or terraform plan -refresh-only. This can lead to unpredictable behavior or conflicts in future applies.
+
+25)What is state drift in Terraform? And how to resolve it?
+A: State drift occurs when the actual state of your infrastructure on the cloud provider differs from what is recorded in the Terraform state file. 
+  This is usually caused by manual changes made to the infrastructure outside of Terraform (e.g., through the cloud provider's console).
+
+Resolution:
+
+1) Run terraform plan. Terraform will detect the drift and show you the changes it wants to make to revert the manual changes.
+2) To update the state file to match the real-world infrastructure, you can use terraform apply -refresh-only.
+3) Alternatively, you can accept the changes proposed by terraform plan and run terraform apply to bring the infrastructure back to the state defined in your configuration.
+
+26) What is locals in Terraform?
+A: locals in Terraform are used to define reusable local values within a configuration. locals are used to run expression or functions and save the result to a variable.
+
+Example:
+ locals {
+  ami_id = "ami-090252cbe067a9e58"
+  sg_id = "sg-tweyyrouihrjo" #replace your sg group id
+  instance_type = var.instance_name == "db" ? "t2.micro" : "t3.micro"
+
+  tags = {
+    Name = "locals"
+  }
+}
+
+variable "instance_name" {
+    default = "db"
+}
+
+resource "aws_instance" "db" {
+
+    ami = local.ami_id
+    vpc_security_group_ids = [local.sg_id]
+    instance_type = local.instance_type
+    tags = local.tags
+}
+
+  
